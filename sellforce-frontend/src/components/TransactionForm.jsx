@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { PriceContext } from '../App';
 
 const TransactionForm = ({ onBuy, onSell }) => {
+
+  const price =  useContext(PriceContext);
+
   const [ticker, setTicker] = useState('');
   const [quantity, setQuantity] = useState(0);
 
   const handleBuySubmit = (event) => {
     event.preventDefault();
-    onBuy({ ticker, quantity });
+    onBuy({ ticker, quantity, price});
   };
 
   const handleSellSubmit = (event) => {

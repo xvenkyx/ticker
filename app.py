@@ -23,7 +23,9 @@ cursor.execute("""
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL,
         ticker VARCHAR(10) NOT NULL,
+        buysell VARCHAR(10) NOT NULL,
         quantity INTEGER NOT NULL,
+        price DECIMAL(10, 3) NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 """)
@@ -46,12 +48,13 @@ def buy_stock():
     ticker = data['ticker']
     quantity = data['quantity']
     user_id = data['user_id']
+    price = data["price"]
     # Save transaction to database
     cursor = db.cursor()
-    cursor.execute("INSERT INTO transactions (user_id, ticker, quantity) VALUES (%s, %s, %s)", (user_id, ticker, quantity))
+    cursor.execute("INSERT INTO transactions (user_id, ticker, buysell, quantity, price) VALUES (%s, %s, %s, %s, %s)", (user_id, ticker, "BUY", quantity, price))
     db.commit()
     cursor.close()
-    return jsonify({'message': 'Stock bought successfully', 'ticker': ticker,  'quantity': quantity})
+    return jsonify({'message': 'Stock bought successfully', 'ticker': ticker,  'quantity': quantity, 'price': price})
 
 
 @app.route('/sell', methods=['POST'])
@@ -60,12 +63,13 @@ def sell_stock():
     ticker = data['ticker']
     quantity = data['quantity']
     user_id = data['user_id']
+    price = data["price"]
     # Save transaction to database
     cursor = db.cursor()
-    cursor.execute("INSERT INTO transactions (user_id, ticker, quantity) VALUES (%s, %s, %s)", (user_id, ticker, quantity))
+    cursor.execute("INSERT INTO transactions (user_id, ticker, buysell, quantity, price) VALUES (%s, %s, %s, %s, %s)", (user_id, ticker, "SELL", quantity, price))
     db.commit()
     cursor.close()
-    return jsonify({'message': 'Stock sold successfully', 'ticker': ticker,  'quantity': quantity})
+    return jsonify({'message': 'Stock sold successfully', 'ticker': ticker,  'quantity': quantity, 'price': price})
 
 @app.route('/portfolio', methods=['GET'])
 def view_portfolio():
@@ -77,7 +81,7 @@ def view_portfolio():
     print(transactions)
     portfolio = []
     for transaction in transactions:
-        portfolio.append({'ticker': transaction[2], 'quantity': transaction[3]})
+        portfolio.append({'ticker': transaction[2], 'quantity': transaction[4], 'buysell':transaction[3], 'price':transaction[5]})
     cursor.close()
     return jsonify(portfolio)
 
