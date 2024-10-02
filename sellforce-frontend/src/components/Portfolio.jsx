@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Portfolio = ({ portfolio }) => {
+  
   if (!Array.isArray(portfolio)) {
     return <div>Invalid portfolio data</div>;
   }

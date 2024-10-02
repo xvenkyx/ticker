@@ -51,7 +51,8 @@ def buy_stock():
     cursor.execute("INSERT INTO transactions (user_id, ticker, quantity) VALUES (%s, %s, %s)", (user_id, ticker, quantity))
     db.commit()
     cursor.close()
-    return jsonify({'message': 'Stock bought successfully'})
+    return jsonify({'message': 'Stock bought successfully', 'ticker': ticker,  'quantity': quantity})
+
 
 @app.route('/sell', methods=['POST'])
 def sell_stock():
@@ -64,7 +65,7 @@ def sell_stock():
     cursor.execute("INSERT INTO transactions (user_id, ticker, quantity) VALUES (%s, %s, %s)", (user_id, ticker, quantity))
     db.commit()
     cursor.close()
-    return jsonify({'message': 'Stock sold successfully'})
+    return jsonify({'message': 'Stock sold successfully', 'ticker': ticker,  'quantity': quantity})
 
 @app.route('/portfolio', methods=['GET'])
 def view_portfolio():
@@ -73,9 +74,10 @@ def view_portfolio():
     cursor = db.cursor()
     cursor.execute("SELECT * FROM transactions WHERE user_id = %s", (user_id,))
     transactions = cursor.fetchall()
+    print(transactions)
     portfolio = []
     for transaction in transactions:
-        portfolio.append({'ticker': transaction[1], 'quantity': transaction[2]})
+        portfolio.append({'ticker': transaction[2], 'quantity': transaction[3]})
     cursor.close()
     return jsonify(portfolio)
 
