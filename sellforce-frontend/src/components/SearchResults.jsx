@@ -1,9 +1,10 @@
 import React from "react";
 
 const SearchResults = ({ results }) => {
+  console.log(results)
   
   return (
-    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-4">
       <h2 className="text-lg font-bold mb-2">Search Results</h2>
       <ul>
         <li>
